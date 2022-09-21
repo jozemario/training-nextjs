@@ -2,7 +2,7 @@
 NextJS Design Patterns and Module Federation
 
 
-<details><summary>Tech Stack </summary>
+<details><summary>Project Structure</summary>
 <p>
 
 #### Ecosystem:
@@ -10,7 +10,26 @@ NextJS Design Patterns and Module Federation
 host-app: Next.js 12
 remote-app: React 17 + Webpack 5
 ```
-</p></details>
+</p>
+<p>
+
+#### Structure:
+
+```
+The remote-app
+Within this application, we are exposing a Button component that utilizes a CSS-in-JS design solution.
+If you'll notice the shared config, you can see that the version of react and react-dom have been set to 0.
+When consuming the remote app within a Next.js environment, we need to make sure that webpack always selects the host's copy of these modules.
+By combining the version: '0' syntax with singleton: true we can guarantee that this will be the case.
+NOTE: If version: '0' is omitted, you'll encounter an issue where a copy of react will be downloaded from the remoteEntry.
+
+NOTE: Another issue you may run into is an invalid hook call if you are federating a component that uses react hooks. This is directly related to multiple copies of react running at the same time. The above resolves this.
+
+The host-app
+Within this application, we've configured the remotes object inside of the NextFederationPlugin.
+```
+</p>
+</details>
 
 <details><summary>Development</summary>
 <p>
@@ -38,21 +57,4 @@ Navigate to localhost:3000
 </p>
 </details>
 
-<details><summary>Project Structure</summary>
-<p>
 
-```
-The remote-app
-Within this application, we are exposing a Button component that utilizes a CSS-in-JS design solution.
-If you'll notice the shared config, you can see that the version of react and react-dom have been set to 0.
-When consuming the remote app within a Next.js environment, we need to make sure that webpack always selects the host's copy of these modules.
-By combining the version: '0' syntax with singleton: true we can guarantee that this will be the case.
-NOTE: If version: '0' is omitted, you'll encounter an issue where a copy of react will be downloaded from the remoteEntry.
-
-NOTE: Another issue you may run into is an invalid hook call if you are federating a component that uses react hooks. This is directly related to multiple copies of react running at the same time. The above resolves this.
-
-The host-app
-Within this application, we've configured the remotes object inside of the NextFederationPlugin.
-```
-</p>
-</details>
