@@ -7,13 +7,8 @@ NextJS Design Patterns and Module Federation
 
 #### Ecosystem:
 ```
-NodeJs v.14.x
-Express v4.16.0
-Nodemon v2.0.19
-Mysql v.2.17.0
-Prisma v4.1.1
-Jest": v28.1.3
-Pino v6.14.0
+host-app: Next.js 12
+remote-app: React 17 + Webpack 5
 ```
 </p></details>
 
@@ -24,7 +19,7 @@ Pino v6.14.0
 ```
 github clone git@github.com:jozemario/training-nextjs.git
 cd training-nextjs/
-git checkout dev
+git checkout develop
 ```
 #### Setup project
 ```
@@ -47,20 +42,17 @@ Navigate to localhost:3000
 <p>
 
 ```
-├── server.js        the entry point for starting the server (network configurations)
-src/
-  ├── app.js         Express(http-server) config
-  ├── routes/        Express route handlers for all the endpoints of the app
-  ├── middleware/    Middleware for the endpoints of the app
-  ├── config/        Environment configurations
-        ├── utils/   Common utils across app
-  ├── services/      Service layer with the business logic
-  ├── models/        Model layer with schemas
-  ├── database/      Database schema with migrations and config
-test/
-  ├── integration/   All the integration tests of the app
-├── package.json     Main project configuration file
-├── ...              Others config files (.gitignore, etc)
+The remote-app
+Within this application, we are exposing a Button component that utilizes a CSS-in-JS design solution.
+If you'll notice the shared config, you can see that the version of react and react-dom have been set to 0.
+When consuming the remote app within a Next.js environment, we need to make sure that webpack always selects the host's copy of these modules.
+By combining the version: '0' syntax with singleton: true we can guarantee that this will be the case.
+NOTE: If version: '0' is omitted, you'll encounter an issue where a copy of react will be downloaded from the remoteEntry.
+
+NOTE: Another issue you may run into is an invalid hook call if you are federating a component that uses react hooks. This is directly related to multiple copies of react running at the same time. The above resolves this.
+
+The host-app
+Within this application, we've configured the remotes object inside of the NextFederationPlugin.
 ```
 </p>
 </details>
